@@ -75,10 +75,10 @@ class HomeController extends GetxController {
       );
       if (gridController.text != 'Success') {
         wordSearchEnabled.value = false;
-        debugPrint('failed');
+        // debugPrint('failed');
       } else {
         wordSearchEnabled.value = true;
-        debugPrint('success');
+        // debugPrint('success');
       }
       update();
     }
@@ -108,8 +108,8 @@ class HomeController extends GetxController {
               },
             ));
     gridSelectedIndexes.value = RxList.from(SearchLogic()
-        .searchGridWord(grid, text, rowCount.value, columnCount.value));
+        .getAllCombos(grid, text, rowCount.value, columnCount.value));
     update();
-    debugPrint(grid.toString());
+    // debugPrint(grid.toString());
   }
 }

@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
-
 class SearchLogic {
   final List<int> x = [-1, -1, -1, 0, 0, 1, 1, 1];
   final List<int> y = [-1, 0, 1, -1, 1, -1, 0, 1];
   List<int> indexes = [];
+
+  List<int> allIndexes = [];
 
   bool searchGrid(
       List<List<int>> grid, int row, int col, String word, int r, int c) {
@@ -15,6 +15,7 @@ class SearchLogic {
     int len = word.length;
     // debugPrint('initial -> row($row) column($col)');
     for (int dir = 0; dir < 8; dir++) {
+      indexes = [];
       int k;
       int rd = (row + x[dir]);
       int cd = (col + y[dir]);
@@ -34,8 +35,9 @@ class SearchLogic {
       if (k == len) {
         // debugPrint('final -> row(${rd}) column(${cd})');
         indexes.add(getIndex(row, col, c));
-        debugPrint(indexes.toString());
-        return true;
+        allIndexes.addAll(indexes);
+        // debugPrint(indexes.toString());
+        // return true;
       } else {
         indexes = [];
       }
@@ -44,18 +46,24 @@ class SearchLogic {
     return false;
   }
 
-  List<int> searchGridWord(List<List<int>> grid, String word, int r, int c) {
+  void searchGridWord(List<List<int>> grid, String word, int r, int c) {
+    allIndexes = [];
     for (int row = 0; row < r; row++) {
       for (int col = 0; col < c; col++) {
-        if ((grid[row][col] == word.codeUnitAt(0)) &&
-            searchGrid(grid, row, col, word, r, c)) {
+        var searchGridBool = searchGrid(grid, row, col, word, r, c);
+        if ((grid[row][col] == word.codeUnitAt(0)) && searchGridBool) {
           // Get.snackbar("Found", indexes.toString(),
           //     backgroundColor: Colors.blueGrey);
-          return indexes;
+          indexes = [];
         }
       }
     }
-    return [];
+    // debugPrint(allIndexes.toString());
+  }
+
+  List<int> getAllCombos(List<List<int>> grid, String word, int r, int c) {
+    searchGridWord(grid, word, r, c);
+    return allIndexes;
   }
 
   int getIndex(int row, int column, int columnCount) {
