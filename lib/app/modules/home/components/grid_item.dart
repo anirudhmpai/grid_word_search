@@ -25,7 +25,7 @@ class GridItem extends StatelessWidget {
       ),
       child: TextField(
         controller: gridItemController,
-        onChanged: (text) => gridItemTextChanged,
+        onChanged: gridItemTextChanged,
         maxLength: 1,
         keyboardType: TextInputType.text,
         textAlign: TextAlign.center,

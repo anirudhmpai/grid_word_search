@@ -71,7 +71,7 @@ class HomeController extends GetxController {
     update();
   }
 
-  void checkGridEmpty() {
+  checkGridEmpty() {
     if (rowCount > 2 && columnCount > 2) {
       var gridController = gridItemControllers.firstWhere(
         (element) => element.text.trim() == '',
@@ -82,6 +82,9 @@ class HomeController extends GetxController {
         // debugPrint('failed');
       } else {
         wordSearchEnabled.value = true;
+        if (searchWordController.text.isNotEmpty) {
+          createGrid(searchWordController.text);
+        }
         // debugPrint('success');
       }
       update();

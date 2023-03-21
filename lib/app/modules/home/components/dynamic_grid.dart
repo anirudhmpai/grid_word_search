@@ -33,7 +33,7 @@ class DynamicLetterGrid extends StatelessWidget {
           controller.columnCount.value * controller.rowCount.value,
           (index) => GridItem(
             gridItemController: controller.gridItemControllers.elementAt(index),
-            gridItemTextChanged: (_) {},
+            gridItemTextChanged: (_) => controller.checkGridEmpty(),
             shouldGlow: controller.gridSelectedIndexes.contains(index),
           ),
         ),
