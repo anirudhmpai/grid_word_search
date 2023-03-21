@@ -1,19 +1,24 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 
 class SearchLogic {
   final List<int> x = [-1, -1, -1, 0, 0, 1, 1, 1];
   final List<int> y = [-1, 0, 1, -1, 1, -1, 0, 1];
+  List<int> indexes = [];
 
-  bool search2D(
+  bool searchGrid(
       List<List<int>> grid, int row, int col, String word, int r, int c) {
+    indexes = [];
     if (grid[row][col] != word.codeUnitAt(0)) {
+      indexes = [];
       return false;
     }
     int len = word.length;
+    // debugPrint('initial -> row($row) column($col)');
     for (int dir = 0; dir < 8; dir++) {
       int k;
       int rd = (row + x[dir]);
       int cd = (col + y[dir]);
+      // debugPrint('combination -> $rd $cd');
       for ((k = 1); k < len; k++) {
         if ((((rd >= r) || (rd < 0)) || (cd >= c)) || (cd < 0)) {
           break;
@@ -21,78 +26,39 @@ class SearchLogic {
         if (grid[rd][cd] != word.codeUnitAt(k)) {
           break;
         }
+        // debugPrint('loop -> row($rd) column($cd)');
+        indexes.add(getIndex(rd, cd, c));
         rd += x[dir];
         cd += y[dir];
       }
       if (k == len) {
+        // debugPrint('final -> row(${rd}) column(${cd})');
+        indexes.add(getIndex(row, col, c));
+        debugPrint(indexes.toString());
         return true;
+      } else {
+        indexes = [];
       }
     }
+    indexes = [];
     return false;
   }
 
-  void patternSearch(List<List<int>> grid, String word, int r, int c) {
+  List<int> searchGridWord(List<List<int>> grid, String word, int r, int c) {
     for (int row = 0; row < r; row++) {
       for (int col = 0; col < c; col++) {
         if ((grid[row][col] == word.codeUnitAt(0)) &&
-            search2D(grid, row, col, word, r, c)) {
-          debugPrint(("${"pattern found at $row"}, ") + col.toString());
+            searchGrid(grid, row, col, word, r, c)) {
+          // Get.snackbar("Found", indexes.toString(),
+          //     backgroundColor: Colors.blueGrey);
+          return indexes;
         }
       }
     }
+    return [];
+  }
+
+  int getIndex(int row, int column, int columnCount) {
+    return (row * columnCount) + column;
   }
 }
-
-// void main(List<String> args) {
-//   int r = 3;
-//   int c = 13;
-//   List<List<int>> grid = [
-//     [
-//       'G'.codeUnitAt(0),
-//       'E'.codeUnitAt(0),
-//       'E'.codeUnitAt(0),
-//       'K'.codeUnitAt(0),
-//       'S'.codeUnitAt(0),
-//       'F'.codeUnitAt(0),
-//       'O'.codeUnitAt(0),
-//       'R'.codeUnitAt(0),
-//       'G'.codeUnitAt(0),
-//       'E'.codeUnitAt(0),
-//       'E'.codeUnitAt(0),
-//       'K'.codeUnitAt(0),
-//       'S'.codeUnitAt(0)
-//     ],
-//     [
-//       'G'.codeUnitAt(0),
-//       'E'.codeUnitAt(0),
-//       'E'.codeUnitAt(0),
-//       'K'.codeUnitAt(0),
-//       'S'.codeUnitAt(0),
-//       'Q'.codeUnitAt(0),
-//       'U'.codeUnitAt(0),
-//       'I'.codeUnitAt(0),
-//       'Z'.codeUnitAt(0),
-//       'G'.codeUnitAt(0),
-//       'E'.codeUnitAt(0),
-//       'E'.codeUnitAt(0),
-//       'K'.codeUnitAt(0)
-//     ],
-//     [
-//       'I'.codeUnitAt(0),
-//       'D'.codeUnitAt(0),
-//       'E'.codeUnitAt(0),
-//       'Q'.codeUnitAt(0),
-//       'A'.codeUnitAt(0),
-//       'P'.codeUnitAt(0),
-//       'R'.codeUnitAt(0),
-//       'A'.codeUnitAt(0),
-//       'C'.codeUnitAt(0),
-//       'T'.codeUnitAt(0),
-//       'I'.codeUnitAt(0),
-//       'C'.codeUnitAt(0),
-//       'E'.codeUnitAt(0)
-//     ]
-//   ];
-//   GFG().patternSearch(grid, "GEEKS");
-//   GFG().patternSearch(grid, "EEE");
-// }

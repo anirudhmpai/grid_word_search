@@ -34,7 +34,7 @@ class DynamicLetterGrid extends StatelessWidget {
           (index) => GridItem(
             gridItemController: controller.gridItemControllers.elementAt(index),
             gridItemTextChanged: (_) {},
-            shouldGlow: index % 8 == 0,
+            shouldGlow: controller.gridSelectedIndexes.contains(index),
           ),
         ),
       );

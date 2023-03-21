@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+import 'package:grid_search/app/modules/home/components/search_logic.dart';
 
 class HomeController extends GetxController {
   final rowCount = 0.obs;
@@ -12,6 +13,7 @@ class HomeController extends GetxController {
 
   var gridItemControllers = List<TextEditingController>.empty();
   var grid = List<List<int>>.empty();
+  RxList<int> gridSelectedIndexes = RxList<int>.empty();
 
   // @override
   // void onInit() {
@@ -49,7 +51,7 @@ class HomeController extends GetxController {
   }
 
   searchWordValueChanged(String text) {
-    createGrid();
+    createGrid(text);
   }
 
   reset() {
@@ -57,6 +59,7 @@ class HomeController extends GetxController {
     columnCount.value = 0;
     grid.clear();
     gridItemControllers.clear();
+    gridSelectedIndexes.clear();
     rowController.text = '';
     rowCount.value = 0;
     searchWordController.text = '';
@@ -90,7 +93,11 @@ class HomeController extends GetxController {
     }
   }
 
-  void createGrid() {
+  void createGrid(String text) {
+    if (text.trim().isEmpty) {
+      gridSelectedIndexes.clear();
+      return;
+    }
     grid = List.generate(
         rowCount.value,
         (rowIndex) => List.generate(
@@ -100,6 +107,9 @@ class HomeController extends GetxController {
                 return gridItemControllers.elementAt(index).text.codeUnitAt(0);
               },
             ));
+    gridSelectedIndexes.value = RxList.from(SearchLogic()
+        .searchGridWord(grid, text, rowCount.value, columnCount.value));
+    update();
     debugPrint(grid.toString());
   }
 }
