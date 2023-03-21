@@ -51,15 +51,19 @@ class HomeController extends GetxController {
   }
 
   searchWordValueChanged(String text) {
+    if (text.trim().isEmpty) {
+      gridSelectedIndexes.clear();
+      return;
+    }
     createGrid(text);
   }
 
   reset() {
     columnController.text = '';
     columnCount.value = 0;
-    grid.clear();
-    gridItemControllers.clear();
-    gridSelectedIndexes.clear();
+    grid = [];
+    gridItemControllers = [];
+    gridSelectedIndexes = RxList.empty();
     rowController.text = '';
     rowCount.value = 0;
     searchWordController.text = '';
@@ -89,15 +93,11 @@ class HomeController extends GetxController {
       gridItemControllers = List.generate(rowCount.value * columnCount.value,
           (index) => TextEditingController());
     } else {
-      gridItemControllers.clear();
+      gridItemControllers = [];
     }
   }
 
   void createGrid(String text) {
-    if (text.trim().isEmpty) {
-      gridSelectedIndexes.clear();
-      return;
-    }
     grid = List.generate(
         rowCount.value,
         (rowIndex) => List.generate(
