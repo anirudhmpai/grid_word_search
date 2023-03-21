@@ -11,6 +11,7 @@ class HomeController extends GetxController {
   var searchWordController = TextEditingController();
 
   var gridItemControllers = List<TextEditingController>.empty();
+  var grid = List<List<int>>.empty();
 
   // @override
   // void onInit() {
@@ -48,15 +49,18 @@ class HomeController extends GetxController {
   }
 
   searchWordValueChanged(String text) {
-    
+    createGrid();
   }
 
   reset() {
-    rowCount.value = 0;
-    columnCount.value = 0;
-    rowController.text = '';
     columnController.text = '';
+    columnCount.value = 0;
+    grid.clear();
+    gridItemControllers.clear();
+    rowController.text = '';
+    rowCount.value = 0;
     searchWordController.text = '';
+    wordSearchEnabled.value = false;
     update();
   }
 
@@ -81,6 +85,21 @@ class HomeController extends GetxController {
     if (rowCount > 2 && columnCount > 2) {
       gridItemControllers = List.generate(rowCount.value * columnCount.value,
           (index) => TextEditingController());
+    } else {
+      gridItemControllers.clear();
     }
+  }
+
+  void createGrid() {
+    grid = List.generate(
+        rowCount.value,
+        (rowIndex) => List.generate(
+              columnCount.value,
+              (columnIndex) {
+                var index = (rowIndex * columnCount.value) + columnIndex;
+                return gridItemControllers.elementAt(index).text.codeUnitAt(0);
+              },
+            ));
+    debugPrint(grid.toString());
   }
 }
